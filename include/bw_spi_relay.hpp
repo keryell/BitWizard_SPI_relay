@@ -150,13 +150,13 @@ private:
   std::bitset<last_relay + 1 - first_relay> state;
 
 
-  //* Synchronize the state of the relais with the local state
+  //* Synchronize the state of the relays with the local state
   void update() {
     /*for (int i = 0; i <3; ++i)*/ {
     std::array<std::uint8_t, 3>
       message { address,
                 register_id,
-                // The 4 lower bits represent the state of the relais
+                // The 4 lower bits represent the state of the relays
                 static_cast<std::uint8_t>(state.to_ulong()) };
     spi.transfer(message);
   }
@@ -179,6 +179,19 @@ public:
    */
   void switch_off(int relay) {
     state.reset(relay);
+    update();
+  }
+
+  //* Switch all relays on
+  void all_on() {
+    state.set();
+    update();
+  }
+
+
+  //* Switch all relays off
+  void all_off() {
+    state.reset();
     update();
   }
 

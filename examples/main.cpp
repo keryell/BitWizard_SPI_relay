@@ -19,8 +19,17 @@ int main(int argc, char *argv[]) {
 
   // Switch relay 2 off
   r.switch_off(2);
+  std::this_thread::sleep_for(0.5s);
 
-  // Make a chaser on the relais & LED
+  // Full on
+  r.all_on();
+  std::this_thread::sleep_for(0.5s);
+
+  // Full off
+  r.all_off();
+  std::this_thread::sleep_for(0.3s);
+
+  // Make a chaser on the relays & LED
   for (int j = 0; j < 3; ++j) {
     for (auto i = r.first_relay; i <= r.last_relay; ++i) {
       if (i > r.first_relay)
