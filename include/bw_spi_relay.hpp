@@ -134,6 +134,10 @@ public:
   // The identifier of the last relay
   static auto constexpr last_relay = 3;
 
+
+  // The type used to store the state
+  using state_type = std::bitset<last_relay + 1 - first_relay>;
+
 private:
 
   spidev spi;
@@ -147,12 +151,11 @@ private:
   /** Keep the state of the 4 relays.
 
       A set bit represents a relay in on state */
-  std::bitset<last_relay + 1 - first_relay> state;
+  state_type state;
 
 
   //* Synchronize the state of the relays with the local state
   void update() {
-    /*for (int i = 0; i <3; ++i)*/ {
     std::array<std::uint8_t, 3>
       message { address,
                 register_id,
@@ -160,13 +163,13 @@ private:
                 static_cast<std::uint8_t>(state.to_ulong()) };
     spi.transfer(message);
   }
-}
+
 public:
 
   /** Switch a relay on
 
       \param[in] relay is the number (0--3) of the relay to switch on
-   */
+  */
   void switch_on(int relay) {
     state.set(relay);
     update();
@@ -176,11 +179,12 @@ public:
   /** Switch a relay off
 
       \param[in] relay is the number (0--3) of the relay to switch off
-   */
+  */
   void switch_off(int relay) {
     state.reset(relay);
     update();
   }
+
 
   //* Switch all relays on
   void all_on() {
@@ -192,6 +196,19 @@ public:
   //* Switch all relays off
   void all_off() {
     state.reset();
+    update();
+  }
+
+
+  //* Get the global state of the relays
+  auto get_state() {
+    return state;
+  }
+
+
+  //* Set the global state of the relays
+  void set_state(const state_type &s) {
+    state = s;
     update();
   }
 

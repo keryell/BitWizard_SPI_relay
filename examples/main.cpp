@@ -6,13 +6,16 @@
 // To use the nice litterals prefixes to express time, such as 2s, 3h, 27ms
 using namespace std::chrono_literals;
 
-
+//* Exercise the various API methods
 int main(int argc, char *argv[]) {
 
   raspberry_pi::bit_wizard::spi_relay4 r;
 
   // Switch relay 2 on
   r.switch_on(2);
+
+  // Save the state for later reuse
+  auto saved_state = r.get_state();
 
   // Wait a half second
   std::this_thread::sleep_for(0.5s);
@@ -46,6 +49,9 @@ int main(int argc, char *argv[]) {
       std::this_thread::sleep_for(200ms);
     }
   }
+
+  // Restore a state from the past
+  r.set_state(saved_state);
 
   return 0;
 }
