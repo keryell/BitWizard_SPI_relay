@@ -20,6 +20,24 @@ int main(int argc, char *argv[]) {
   // Switch relay 2 off
   r.switch_off(2);
 
+  // Make a chaser on the relais & LED
+  for (int j = 0; j < 3; ++j) {
+    for (auto i = r.first_relay; i <= r.last_relay; ++i) {
+      if (i > r.first_relay)
+        r.switch_off(i - 1);
+
+      r.switch_on(i);
+      std::this_thread::sleep_for(200ms);
+    }
+    for (auto i = r.last_relay; i >= r.first_relay; --i) {
+      if (i < r.last_relay)
+        r.switch_off(i + 1);
+
+      r.switch_on(i);
+      std::this_thread::sleep_for(200ms);
+    }
+  }
+
   return 0;
 }
 

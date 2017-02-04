@@ -126,17 +126,28 @@ namespace bit_wizard {
 */
 class spi_relay4 {
 
+public:
+
+  // The identifier of the first relay
+  static auto constexpr first_relay = 0;
+
+  // The identifier of the last relay
+  static auto constexpr last_relay = 3;
+
+private:
+
   spidev spi;
 
   // The SPI address of the relay on the bus
   static auto constexpr address = 0xA6;
+
   // The register in the SPI DIO controlling the relay
   static auto constexpr register_id = 0x10;
 
   /** Keep the state of the 4 relays.
 
       A set bit represents a relay in on state */
-  std::bitset<4> state;
+  std::bitset<last_relay + 1 - first_relay> state;
 
 
   //* Synchronize the state of the relais with the local state
@@ -155,7 +166,7 @@ public:
 
       \param[in] relay is the number (0--3) of the relay to switch on
    */
-  void switch_on(std::uint8_t relay) {
+  void switch_on(int relay) {
     state.set(relay);
     update();
   }
@@ -165,7 +176,7 @@ public:
 
       \param[in] relay is the number (0--3) of the relay to switch off
    */
-  void switch_off(std::uint8_t relay) {
+  void switch_off(int relay) {
     state.reset(relay);
     update();
   }
