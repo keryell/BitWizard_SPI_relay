@@ -10,3 +10,11 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
+/*
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### ispell-local-dictionary: "american"
+    ### eval: (flyspell-prog-mode)
+    ### End:
+*/

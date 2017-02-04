@@ -1,3 +1,16 @@
+/** \file
+
+    A modern C++14 interface to control the Raspberry SPI Relay card from
+    BitWizard for Raspberry Pi
+
+    Ronan Keryell.
+
+    Open source according to MIT license
+*/
+
+// Do not include twice
+#ifndef RASPBERRY_PI_BITWIZARD_SPI_RELAY
+#define RASPBERRY_PI_BITWIZARD_SPI_RELAY
 
 extern "C" {
 
@@ -153,3 +166,13 @@ public:
 }
 }
 
+
+/*
+    # Some Emacs stuff:
+    ### Local Variables:
+    ### ispell-local-dictionary: "american"
+    ### eval: (flyspell-prog-mode)
+    ### End:
+*/
+
+#endif // RASPBERRY_PI_BITWIZARD_SPI_RELAY
