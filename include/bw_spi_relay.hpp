@@ -36,7 +36,7 @@ namespace raspberry_pi {
 /** An abstraction of the Linux spidev user-land device driver for SPI
     peripherals
 
-    For some informations:
+    Some information:
 
 
     - https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
@@ -133,7 +133,6 @@ public:
 
   // The identifier of the last relay
   static auto constexpr last_relay = 3;
-
 
   // The type used to store the state
   using state_type = std::bitset<last_relay + 1 - first_relay>;
