@@ -65,8 +65,8 @@ public:
   //* Use 8 bit data transfers
   std::uint8_t bits = 8;
 
-  //* Transfer speed
-  std::uint32_t speed_HZ = 240000;
+  //* Transfer speed. If too high, it is unreliable
+  std::uint32_t speed_HZ = 61000;
 
 
   //* Open the SPI device
@@ -152,6 +152,7 @@ private:
 
   //* Synchronize the state of the relais with the local state
   void update() {
+    /*for (int i = 0; i <3; ++i)*/ {
     std::array<std::uint8_t, 3>
       message { address,
                 register_id,
@@ -159,7 +160,7 @@ private:
                 static_cast<std::uint8_t>(state.to_ulong()) };
     spi.transfer(message);
   }
-
+}
 public:
 
   /** Switch a relay on
