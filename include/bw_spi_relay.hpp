@@ -160,6 +160,16 @@ public:
     update();
   }
 
+
+  /** Switch a relay off
+
+      \param[in] relay is the number (0--3) of the relay to switch off
+   */
+  void switch_off(std::uint8_t relay) {
+    state.reset(relay);
+    update();
+  }
+
 };
 
 
