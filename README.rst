@@ -41,11 +41,16 @@ and the documentation is the comments from the public methods of the
 
 There is a small demo in ``examples/main.cpp``.
 
+The controling daemon uses also some Boost libraries you can get by
+install installing the ``libboost-all-dev`` package for example.
+
 To compile it and run it: ::
 
   cd examples
   make
   ./main
+
+and it will animate the relays for a few seconds.
 
 
 Related links
@@ -60,6 +65,8 @@ Some useful information:
 - https://github.com/rewolff/bw_rpi_tools/blob/master/bw_tool/bw_tool.c
 
 - https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+
+- https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus
 
 - ``linux/Documentation/spi/spidev``
 
