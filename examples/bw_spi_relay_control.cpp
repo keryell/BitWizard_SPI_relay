@@ -37,6 +37,8 @@ void switch_off(int relay) {
 //* Exercise the various API methods
 int main(int argc, char *argv[]) {
 
+  int relay = -1;
+
   // The description title when displaying the help
   po::options_description desc {
     "Controler and daemon for the BitWizard SPI relay card"
@@ -44,10 +46,11 @@ int main(int argc, char *argv[]) {
 
   // Add the supported options
   desc.add_options()
-    ("help", "produce this help message")
-    ("daemon", "run as the detached controling daemon in the background")
-    ("switch-on", po::value<int>(), "switch a relay (0--3) on")
-    ("switch-off", po::value<int>(), "switch a relay (0--3) off")
+    ("help,h", "produce this help message")
+    ("daemon,d", "run as the detached controling daemon in the background")
+    ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
+    ("on", "switch the relay on")
+    ("off", "switch the relay off")
     ;
 
   // Where to get the option results
@@ -63,6 +66,19 @@ int main(int argc, char *argv[]) {
 
   if (vm.count("daemon"))
     daemon();
+
+  if (vm.count("relay")) {
+    relay = vm["relay"].as<int>();
+  }
+
+  if (vm.count("on")) {
+    switch_on(relay);
+  }
+
+
+  if (vm.count("off")) {
+    switch_off(relay);
+  }
 
   return 0;
 }
