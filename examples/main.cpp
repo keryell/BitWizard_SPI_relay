@@ -52,6 +52,12 @@ int main(int argc, char *argv[]) {
 
   // Restore a state from the past
   r.set_state(saved_state);
+  std::this_thread::sleep_for(200ms);
+
+  r.switch_state(1, true);
+  std::this_thread::sleep_for(200ms);
+
+  r.switch_state(1, false);
 
   return 0;
 }

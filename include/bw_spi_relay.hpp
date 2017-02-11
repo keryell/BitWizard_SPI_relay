@@ -156,10 +156,10 @@ private:
   //* Synchronize the state of the relays with the local state
   void update() {
     std::array<std::uint8_t, 3>
-      message { address,
-                register_id,
-                // The 4 lower bits represent the state of the relays
-                static_cast<std::uint8_t>(state.to_ulong()) };
+      message { { address,
+                  register_id,
+                  // The 4 lower bits represent the state of the relays
+                  static_cast<std::uint8_t>(state.to_ulong()) } };
     spi.transfer(message);
   }
 
@@ -181,6 +181,19 @@ public:
   */
   void switch_off(int relay) {
     state.reset(relay);
+    update();
+  }
+
+
+  /** Set the state of a relay
+
+      \param[in] relay is the number (0--3) of the relay to set
+
+      \param[in] s is a boolean to define the state of the relay: \c true
+      for "on" and \c false for "off"
+  */
+  void switch_state(int relay, bool s) {
+    state.set(relay, s);
     update();
   }
 
