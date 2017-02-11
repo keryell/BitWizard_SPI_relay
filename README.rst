@@ -23,7 +23,7 @@ It may be useful for some other people, so here it is.
 Anyway, it is not complete waste of time: I will recycle and extend this
 SPI library in some other projects.
 
-This has been tested with Raspbian GNU/Linux 8 (jessie) with G++ 4.9 on a
+This has been tested with Raspbian GNU/Linux 8 (jessie) with Clang 3.9 on a
 Raspberry Pi 3.
 
 
@@ -41,9 +41,6 @@ and the documentation is the comments from the public methods of the
 
 There is a small demo in ``examples/main.cpp``.
 
-The controling daemon uses also some Boost libraries you can get by
-install installing the ``libboost-all-dev`` package for example.
-
 To compile it and run it: ::
 
   cd examples
@@ -51,6 +48,34 @@ To compile it and run it: ::
   ./main
 
 and it will animate the relays for a few seconds.
+
+
+The controller/daemon program for the relays
+--------------------------------------------
+
+In the examples, there is also a program to control the relays
+independently, in a persistent way.
+
+So you can use this program in a Domoticz script for example.
+
+To use it you have first to launch the controlling process attached to the
+relays with: ::
+
+  ./bw_spi_relay_control --daemon
+
+Then to control a relay, use for example: ::
+
+  ./bw_spi_relay_control --relay 3 --on
+  ./bw_spi_relay_control --relay 1 --off
+
+The controling daemon uses also some Boost libraries you can get by
+installing the ``libboost-all-dev`` package for example.
+
+To compile it, you need to avoid ``g++-4.9`` which is buggy with the
+Boost.Interprocess library. Use instead for example ``clang-3.9`` package
+and compile with: ::
+
+  make CXX=clang++-3.9
 
 
 Related links
