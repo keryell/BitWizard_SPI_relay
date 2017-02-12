@@ -59,8 +59,8 @@ boost::interprocess::message_queue command_queue {
   /* Close the default file descriptors so it can run detached in the
      background */
   ::close(STDIN_FILENO);
-  ::close(STDIN_FILENO);
-  ::close(STDIN_FILENO);
+  ::close(STDOUT_FILENO);
+  ::close(STDERR_FILENO);
 
   // Physical access to the relays
   raspberry_pi::bit_wizard::spi_relay4 r;
