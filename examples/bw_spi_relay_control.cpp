@@ -33,6 +33,9 @@ struct command_message {
   //* On (true)/off (false) state
   bool state;
 
+  //* Reset all the relays, when used as a relay_command
+  static int constexpr reset = -2;
+
   //* Stop the daemon, when used as a relay_command
   static int constexpr stop_daemon = -1;
 };
@@ -74,6 +77,10 @@ boost::interprocess::message_queue command_queue {
       throw std::runtime_error { "Received message with wrong size" };
 
     switch (cm.relay_command) {
+
+    case command_message::reset:
+      r.all_off();
+      break;
 
     case command_message::stop_daemon:
       std::exit(0);
@@ -132,6 +139,12 @@ void switch_off(int relay) {
 }
 
 
+//* Reset all the relays to off state
+void reset() {
+  send_command(command_message::reset, false);
+}
+
+
 //* Stop the running daemon
 void stop_daemon() {
   send_command(command_message::stop_daemon, false);
@@ -155,6 +168,7 @@ int main(int argc, char *argv[]) {
     ("on", "switch the relay on")
     ("off", "switch the relay off")
     ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
+    ("reset", "switch all the relays off")
     ("stop", "stop the running daemon")
     ;
 
@@ -174,6 +188,9 @@ int main(int argc, char *argv[]) {
 
   if (vm.count("daemon"))
     daemon();
+
+  if (vm.count("reset"))
+    reset();
 
   if (vm.count("relay")) {
     relay = vm["relay"].as<int>();

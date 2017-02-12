@@ -65,6 +65,7 @@ relays with: ::
 
 Then to control a relay, use for example: ::
 
+  ./bw_spi_relay_control --reset
   ./bw_spi_relay_control --relay 3 --on
   ./bw_spi_relay_control --relay 1 --off
 
