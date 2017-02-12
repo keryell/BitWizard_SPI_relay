@@ -169,6 +169,7 @@ int main(int argc, char *argv[]) {
     ("off", "switch the relay off")
     ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
     ("reset", "switch all the relays off")
+    ("state,s", po::value<int>(), "specify the relay id (0--3)")
     ("stop", "stop the running daemon")
     ;
 
@@ -192,17 +193,17 @@ int main(int argc, char *argv[]) {
   if (vm.count("reset"))
     reset();
 
-  if (vm.count("relay")) {
-    relay = vm["relay"].as<int>();
-  }
+  if (vm.count("state"))
+    vm["state"].as<int>();
 
-  if (vm.count("on")) {
+  if (vm.count("on"))
     switch_on(relay);
-  }
 
-  if (vm.count("off")) {
+  if (vm.count("off"))
     switch_off(relay);
-  }
+
+  if (vm.count("state"))
+    send_command(relay, vm["state"].as<int>());
 
   return 0;
 }
