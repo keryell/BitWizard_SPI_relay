@@ -68,6 +68,10 @@ Then to control a relay, use for example: ::
   ./bw_spi_relay_control --relay 3 --on
   ./bw_spi_relay_control --relay 1 --off
 
+You can stop the daemon with: ::
+
+  ./bw_spi_relay_control --stop
+
 The controling daemon uses also some Boost libraries you can get by
 installing the ``libboost-all-dev`` package for example.
 

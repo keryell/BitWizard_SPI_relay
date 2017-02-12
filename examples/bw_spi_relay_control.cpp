@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 
@@ -31,6 +32,9 @@ struct command_message {
   int relay_command;
   //* On (true)/off (false) state
   bool state;
+
+  //* Stop the daemon, when used as a relay_command
+  static int constexpr stop_daemon = -1;
 };
 
 
@@ -48,7 +52,7 @@ boost::interprocess::message_queue command_queue {
 
 
 //* Handle the requests from the controling process
-void handle_requests() {
+[[noreturn]] void handle_requests() {
   /* Close the default file descriptors so it can run detached in the
      background */
   ::close(STDIN_FILENO);
@@ -68,8 +72,17 @@ void handle_requests() {
     command_queue.receive(&cm, sizeof(cm), recvd_size, priority);
     if (recvd_size != sizeof(cm))
       throw std::runtime_error { "Received message with wrong size" };
-    // Set the state of the relay to the requested state
-    r.switch_state(cm.relay_command, cm.state);
+
+    switch (cm.relay_command) {
+
+    case command_message::stop_daemon:
+      std::exit(0);
+      break;
+
+    default:
+      // Set the state of the relay to the requested state
+      r.switch_state(cm.relay_command, cm.state);
+    }
   }
 }
 
@@ -119,6 +132,12 @@ void switch_off(int relay) {
 }
 
 
+//* Stop the running daemon
+void stop_daemon() {
+  send_command(command_message::stop_daemon, false);
+}
+
+
 //* Exercise the various API methods
 int main(int argc, char *argv[]) {
 
@@ -133,9 +152,10 @@ int main(int argc, char *argv[]) {
   desc.add_options()
     ("help,h", "produce this help message")
     ("daemon,d", "run as the detached controling daemon in the background")
-    ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
     ("on", "switch the relay on")
     ("off", "switch the relay off")
+    ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
+    ("stop", "stop the running daemon")
     ;
 
   // Where to get the option results
@@ -148,6 +168,9 @@ int main(int argc, char *argv[]) {
     std::cout << desc << std::endl;
     return 0;
   }
+
+  if (vm.count("stop"))
+    stop_daemon();
 
   if (vm.count("daemon"))
     daemon();
