@@ -1,6 +1,6 @@
 /** \file
 
-    A modern C++14 interface to control the Raspberry SPI Relay card from
+    A modern C++ interface to control the Raspberry SPI Relay card from
     BitWizard for Raspberry Pi
 
     Ronan Keryell.
@@ -39,7 +39,7 @@ namespace raspberry_pi {
     Some information:
 
 
-    - https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+    - https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#serial-peripheral-interface-spi
 
     - linux/Documentation/spi/spidev
 

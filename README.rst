@@ -17,14 +17,14 @@ Raspberry Pi by https://domoticz.com/ I had to find some way to deal with
 the SPI version...
 
 Unfortunately I did not find a library compatible with my modern C++
-palate, so here is a small C++14 library of my own to deal with this card.
+palate, so here is a small modern C++ library of my own to deal with this card.
 It may be useful for some other people, so here it is.
 
 Anyway, it is not complete waste of time: I will recycle and extend this
 SPI library in some other projects.
 
-This has been tested with Raspbian GNU/Linux 8 (jessie) with Clang 3.9 on a
-Raspberry Pi 3.
+This has been tested with Raspbian GNU/Linux 11 (Bullseye) with G++
+10.2 on a Raspberry Pi 3.
 
 
 The library
@@ -40,6 +40,12 @@ and the documentation is the comments from the public methods of the
 ``raspberry_pi::bit_wizard::spi_relay4``.
 
 There is a small demo in ``examples/main.cpp``.
+
+The controling daemon uses also some Boost libraries you can get by
+installing the ``libboost-all-dev`` package for example.
+
+To use SPI on the Raspberry Pi, it has to be configured to enable it,
+for example by running ``raspi-config``.
 
 To compile it and run it: ::
 
@@ -79,15 +85,6 @@ To get the list of the commands: ::
 
   ./bw_spi_relay_control --help
 
-The controling daemon uses also some Boost libraries you can get by
-installing the ``libboost-all-dev`` package for example.
-
-To compile it, you need to avoid ``g++-4.9`` which is buggy with the
-Boost.Interprocess library. Use instead for example ``clang-3.9`` package
-and compile with: ::
-
-  make CXX=clang++-3.9
-
 
 Related links
 -------------
@@ -100,7 +97,7 @@ Some useful information:
 
 - https://github.com/rewolff/bw_rpi_tools/blob/master/bw_tool/bw_tool.c
 
-- https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+- https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#serial-peripheral-interface-spi
 
 - https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus
 
