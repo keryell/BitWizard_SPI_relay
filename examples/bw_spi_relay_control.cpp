@@ -165,6 +165,7 @@ int main(int argc, char *argv[]) {
   desc.add_options()
     ("help,h", "produce this help message")
     ("daemon,d", "run as the detached controling daemon in the background")
+    ("foreground", "run as a daemon in the foreground")
     ("on", "switch the relay on")
     ("off", "switch the relay off")
     ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
@@ -186,6 +187,9 @@ int main(int argc, char *argv[]) {
 
   if (vm.count("stop"))
     stop_daemon();
+
+  if (vm.count("foreground"))
+    handle_requests();
 
   if (vm.count("daemon"))
     daemon();
