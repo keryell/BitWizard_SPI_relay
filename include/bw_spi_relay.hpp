@@ -230,13 +230,4 @@ public:
 }
 }
 
-
-/*
-    # Some Emacs stuff:
-    ### Local Variables:
-    ### ispell-local-dictionary: "american"
-    ### eval: (flyspell-prog-mode)
-    ### End:
-*/
-
 #endif // RASPBERRY_PI_BITWIZARD_SPI_RELAY
