@@ -56,12 +56,6 @@ boost::interprocess::message_queue command_queue {
 
 //* Handle the requests from the controling process
 [[noreturn]] void handle_requests() {
-  /* Close the default file descriptors so it can run detached in the
-     background */
-  ::close(STDIN_FILENO);
-  ::close(STDOUT_FILENO);
-  ::close(STDERR_FILENO);
-
   // Physical access to the relays
   raspberry_pi::bit_wizard::spi_relay4 r;
   // The message to be received from the controller
@@ -98,9 +92,15 @@ boost::interprocess::message_queue command_queue {
 void daemon() {
   // Clone the process
   auto pid = ::fork();
-  if (pid == 0)
-    // We are the child and play the role of the daemon
+  if (pid == 0) {
+    /* We are the child and play the role of the daemon.
+       Close the default file descriptors so it can run detached in the
+       background */
+    ::close(STDIN_FILENO);
+    ::close(STDOUT_FILENO);
+    ::close(STDERR_FILENO);
     handle_requests();
+  }
   else if (pid == -1)
     throw std::runtime_error { "Cannot fork a process to act as a daemon" };
   /* Otherwise this process continue and can serve for example as the
