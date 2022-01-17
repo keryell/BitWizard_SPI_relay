@@ -151,7 +151,7 @@ void stop_daemon() {
 }
 
 
-//* Exercise the various API methods
+//* Command line interface for the relays
 int main(int argc, char *argv[]) {
 
   int relay = -1;

@@ -28,6 +28,7 @@ extern "C" {
 #include <cstdint>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 /** Some Raspberry Pi-specific code
  */
@@ -98,7 +99,7 @@ public:
   transfer(std::array<std::uint8_t, 3> &buffer) {
     /* Zero-initialize the structure, including currently unused fields,
        to accommodate potential future updates */
-    spi_ioc_transfer tr = { };
+    spi_ioc_transfer tr = {};
     tr.tx_buf = reinterpret_cast<__u64>(&buffer);
     tr.rx_buf = reinterpret_cast<__u64>(&buffer);
     tr.len = buffer.size();
@@ -152,6 +153,15 @@ private:
       A set bit represents a relay in on state */
   state_type state;
 
+  /** Check the relay identifier is valid
+
+      \param[in] relay identifier to be checked in the valid range
+  */
+  static constexpr void validate(int relay) {
+    if (relay < 0 || relay > last_relay)
+      throw std::runtime_error { "Relay number between 0 and "
+          + std::to_string(last_relay) };
+  }
 
   //* Synchronize the state of the relays with the local state
   void update() {
@@ -180,6 +190,7 @@ public:
       \param[in] relay is the number (0--3) of the relay to switch off
   */
   void switch_off(int relay) {
+    validate(relay);
     state.reset(relay);
     update();
   }
@@ -193,6 +204,7 @@ public:
       for "on" and \c false for "off"
   */
   void switch_state(int relay, bool s) {
+    validate(relay);
     state.set(relay, s);
     update();
   }
