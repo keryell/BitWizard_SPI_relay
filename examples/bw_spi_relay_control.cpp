@@ -152,7 +152,7 @@ void stop_daemon() {
 
 
 //* Command line interface for the relays
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) try {
 
   int relay = -1;
 
@@ -210,4 +210,6 @@ int main(int argc, char *argv[]) {
     send_command(relay, vm["state"].as<int>());
 
   return 0;
+} catch (const std::runtime_error& e) {
+  std::cerr << e.what() <<  std::endl;
 }
