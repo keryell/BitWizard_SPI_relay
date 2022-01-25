@@ -22,7 +22,6 @@ namespace po = boost::program_options;
 */
 auto constexpr command_queue_name { "BitWizard_SPI_relay-command_queue" };
 
-
 /** A data structure to send commands from the controller to the daemon
 
     Use a standard-layout object so we can send it through some IPC.
@@ -65,22 +64,28 @@ boost::interprocess::message_queue command_queue {
   unsigned int priority;
 
   for(;;) /* ever */ {
-    // Wait for a command
+    raspberry_pi::logger("Wait for a command");
     command_queue.receive(&cm, sizeof(cm), recvd_size, priority);
     if (recvd_size != sizeof(cm))
       throw std::runtime_error { "Received message with wrong size" };
 
+    raspberry_pi::logger("Executing command {:d}", cm.relay_command);
+
     switch (cm.relay_command) {
 
     case command_message::reset:
+      raspberry_pi::logger("Resetting all relays");
       r.all_off();
       break;
 
     case command_message::stop_daemon:
+      raspberry_pi::logger("Stopping handling and exiting");
       std::exit(0);
       break;
 
     default:
+      raspberry_pi::logger("Setting relay {:d} to state {:b}", cm.relay_command,
+                           cm.state);
       // Set the state of the relay to the requested state
       r.switch_state(cm.relay_command, cm.state);
     }
@@ -90,9 +95,11 @@ boost::interprocess::message_queue command_queue {
 
 //* Start the daemon process controling the relays
 void daemon() {
+  raspberry_pi::logger("Starting daemon");
   // Clone the process
   auto pid = ::fork();
   if (pid == 0) {
+    raspberry_pi::logger("Daemon started");
     /* We are the child and play the role of the daemon.
        Close the default file descriptors so it can run detached in the
        background */
@@ -126,6 +133,7 @@ void send_command(int relay_command, bool state) {
     \param[in] relay is the id of relay to switch on
 */
 void switch_on(int relay) {
+  raspberry_pi::logger("Switch relay {:d} on", relay);
   send_command(relay, true);
 }
 
@@ -135,18 +143,21 @@ void switch_on(int relay) {
     \param[in] relay is the id of relay to switch off
 */
 void switch_off(int relay) {
+  raspberry_pi::logger("Switch relay {:d} off", relay);
   send_command(relay, false);
 }
 
 
 //* Reset all the relays to off state
 void reset() {
+  raspberry_pi::logger("Reset all relays");
   send_command(command_message::reset, false);
 }
 
 
 //* Stop the running daemon
 void stop_daemon() {
+  raspberry_pi::logger("Stop daemon");
   send_command(command_message::stop_daemon, false);
 }
 
@@ -166,6 +177,7 @@ int main(int argc, char *argv[]) try {
     ("help,h", "produce this help message")
     ("daemon,d", "run as the detached controling daemon in the background")
     ("foreground", "run as a daemon in the foreground")
+    ("verbose", "run in verbose mode")
     ("on", "switch the relay on")
     ("off", "switch the relay off")
     ("relay,r", po::value<int>(&relay), "specify the relay id (0--3)")
@@ -178,6 +190,9 @@ int main(int argc, char *argv[]) try {
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
   po::notify(vm);
+
+  raspberry_pi::logger::verbose = vm.count("verbose");
+  raspberry_pi::logger("Starting");
 
   // Display the help if required
   if (vm.count("help")) {

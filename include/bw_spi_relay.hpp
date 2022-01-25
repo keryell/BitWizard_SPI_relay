@@ -30,9 +30,26 @@ extern "C" {
 #include <stdexcept>
 #include <string>
 
+#include "fmt/format.h"
+
 /** Some Raspberry Pi-specific code
  */
 namespace raspberry_pi {
+
+class logger {
+ public:
+  /// Control verbose mode
+  static inline bool verbose = false;
+
+  template <typename... Args> constexpr logger(Args&&... args) {
+    if (verbose) {
+      fmt::print(std::forward<Args>(args)...);
+      // Use fmt::println when it lands
+      std::puts("");
+      // std::fflush(stdout);
+    }
+  }
+};
 
 /** An abstraction of the Linux spidev user-land device driver for SPI
     peripherals
@@ -170,6 +187,7 @@ private:
                   register_id,
                   // The 4 lower bits represent the state of the relays
                   static_cast<std::uint8_t>(state.to_ulong()) } };
+    logger("Update transferring relay values {:d}", state.to_ullong());
     spi.transfer(message);
   }
 
@@ -235,7 +253,6 @@ public:
     state = s;
     update();
   }
-
 };
 
 

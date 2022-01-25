@@ -41,8 +41,9 @@ and the documentation is the comments from the public methods of the
 
 There is a small demo in ``examples/main.cpp``.
 
-The controling daemon uses also some Boost libraries you can get by
-installing the ``libboost-all-dev`` package for example.
+The controling daemon uses also some Boost libraries and ``{fmt}`` you
+can get by installing the ``libboost-all-dev`` and ``libfmt-dev``
+package for example.
 
 To use SPI on the Raspberry Pi, it has to be configured to enable it,
 for example by running ``raspi-config``.
